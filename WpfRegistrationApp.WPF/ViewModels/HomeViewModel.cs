@@ -17,15 +17,19 @@ namespace WpfRegistrationApp.WPF.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
+        #region Variables
         IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
         public static readonly PasswordHelper PasswordHelper = new PasswordHelper();
+        #endregion
+
+        #region Properties
         public ObservableCollection<UserModel> Users { get; set; }
 
         private Guid _id;
         public Guid Id
         {
             get { return _id; }
-            set { _id = value; OnPropertyChanged(Id.ToString()); }
+            set { _id = value; OnPropertyChanged("ID"); }
         }
         private string _firstName;
         public string FirstName
@@ -103,44 +107,60 @@ namespace WpfRegistrationApp.WPF.ViewModels
             set { _isVaccinated = value; OnPropertyChanged("Checked"); }
         }
 
+        private CustomCommand _insertCommand;
+
+        public CustomCommand SubmitCommand
+        { get; set; }
+        #endregion
+
+        #region Constructor
+        public HomeViewModel()
+        {
+            this.SubmitCommand = new CustomCommand(this.Create);
+        }
+        #endregion
+
+        #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public HomeViewModel()
-        {
-            this.SubmitCommand = new CustomCommand(this.Create);
-        }
+        #endregion
 
-        private CustomCommand _insertCommand;
-
-        public CustomCommand SubmitCommand
-        { get; set; }
-        
+        #region Methods
         public void Create(dynamic obj)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure about the information you have entered?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
-            switch (result)
+            if (this.FirstName == String.Empty || this.FirstName == null && this.LastName == String.Empty || this.LastName == null && this.UserName == String.Empty || this.UserName == null && this.Address == String.Empty || this.Address == null)
             {
-                case MessageBoxResult.Yes:
-                    try
-                    {
-                        dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, PasswordHash = "1234", VaccineName = this.VaccineName, Address = this.Address });
-                        MessageBox.Show("Done.");
-                        ClearAll();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    break;
-
-                case MessageBoxResult.No:
-                    break;
-
+                MessageBox.Show("Please fill up required fields", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Are you sure about the information you have entered?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        try
+                        {
+                            dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, PasswordHash = "1234", VaccineName = this.VaccineName, Address = this.Address });
+                            MessageBox.Show("Done.");
+                            ClearAll();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                        break;
+
+                    case MessageBoxResult.No:
+                        break;
+
+                }
+            }
+            
         }
+
         public void ClearAll()
         {
             this.FirstName = "";
@@ -153,5 +173,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
             this.IsBoosterShot = default;
             this.IsVaccinated = default;
         }
+        #endregion
     }
 }

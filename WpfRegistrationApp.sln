@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfRegistration.Domain", "W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfRegistration.EntityFramework", "WpfRegistration.Framework\WpfRegistration.EntityFramework.csproj", "{99634EEF-FDB2-45EE-B27C-02DF968E55FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfRegistrationApp.WPF", "WpfRegistrationApp.WPF\WpfRegistrationApp.WPF.csproj", "{B2A5158A-D925-4676-9A57-2A15386DE217}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfRegistrationApp.WPF", "WpfRegistrationApp.WPF\WpfRegistrationApp.WPF.csproj", "{B2A5158A-D925-4676-9A57-2A15386DE217}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfRegistration.ConsoleTester", "WpfRegistration.ConsoleTester\WpfRegistration.ConsoleTester.csproj", "{D0A4785D-07C1-4E7E-B90A-BD9F13273567}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfRegistration.ConsoleTester", "WpfRegistration.ConsoleTester\WpfRegistration.ConsoleTester.csproj", "{D0A4785D-07C1-4E7E-B90A-BD9F13273567}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

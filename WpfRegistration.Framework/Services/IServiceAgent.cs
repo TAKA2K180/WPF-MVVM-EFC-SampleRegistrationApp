@@ -25,7 +25,7 @@ namespace WpfRegistration.EntityFramework.Services
                 completed(null, ex);
             }
         }
-
+        
         public void GetUserbyId(Action<ObservableCollection<UserModel>, Exception> completed)
         {
             try

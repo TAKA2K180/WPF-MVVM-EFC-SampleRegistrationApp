@@ -25,6 +25,7 @@ namespace WpfRegistrationApp.WPF
         {
             InitializeComponent();
             DataContext = new MainViewModel();
+
         }
     }
 }

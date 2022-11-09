@@ -56,7 +56,7 @@
                             <ColumnDefinition Width="10"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.2*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Id}" Grid.Column="0" Foreground="{StaticResource MaterialDesignDarkBackground}" FontSize="15" FontFamily="Roboto" Margin="10 0 0 0"></TextBlock>
@@ -73,8 +73,10 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            
 
             <!--<Button Background="{StaticResource MaterialDesignLightBackground}" Foreground="{StaticResource MaterialDesignDarkBackground}" Margin="0 0 3 0" Grid.Column="1" Content="SAVE" FontSize="20" FontFamily="Roboto" IsEnabled="False"/>
 

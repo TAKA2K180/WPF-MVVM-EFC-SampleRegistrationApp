@@ -14,7 +14,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="850">
+        Title="MainWindow" Height="550" Width="850" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewmodel:MainViewModel/>
     </Window.DataContext>
@@ -24,7 +24,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Controls:NavigationBar Grid.Row="0" DataContext="{Binding navigator}"/>
         <ContentControl Grid.Row="1" Content="{Binding navigator.currentViewmodel}"/>
+
+        <!--<TextBlock Text="Welcome to tracer and registration portal" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Roboto" FontSize="25"/>-->
+
+        <Controls:NavigationBar Grid.Row="0" DataContext="{Binding navigator}"/>
     </Grid>
 </Window>

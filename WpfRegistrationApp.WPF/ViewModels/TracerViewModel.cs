@@ -20,12 +20,15 @@ namespace WpfRegistrationApp.WPF.ViewModels
 {
     public class TracerViewModel : BaseViewModel
     {
+        #region Variables
         private IServiceAgent _serviceAgent;
         IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
+        #endregion
 
+        #region Properties
         private ObservableCollection<UserModel> _users;
         public ObservableCollection<UserModel> Users
-        { 
+        {
             get { return _users; }
             set { _users = value; OnPropertyChanged("Users"); }
         }
@@ -84,12 +87,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         private DateTime _dateFirstDose;
 
-        public TracerViewModel(IServiceAgent serviceAgent)
-        {
-            this._serviceAgent = serviceAgent;
-            this.DeleteCommand = new CustomCommand(DeleteItem);
-        }
-
         public CustomCommand DeleteCommand { get; set; }
 
         public DateTime DateFirstDose
@@ -137,6 +134,17 @@ namespace WpfRegistrationApp.WPF.ViewModels
             get { return _isVaccinated; }
             set { _isVaccinated = value; }
         }
+        #endregion
+
+        #region Constructor
+        public TracerViewModel(IServiceAgent serviceAgent)
+        {
+            this._serviceAgent = serviceAgent;
+            this.DeleteCommand = new CustomCommand(DeleteItem);
+        }
+        #endregion
+
+        #region Methods
         public void LoadUsers()
         {
             _serviceAgent.GetUsers((_users, error) => UserLoaded(_users, error));
@@ -152,13 +160,11 @@ namespace WpfRegistrationApp.WPF.ViewModels
             {
                 NotifyError(error.Message, error);
             }
-            // isbusy = false;
         }
         private void NotifyError(string message, Exception error)
         {
+            //MessageBox.Show(message);
         }
-        public INavigator navigator { get; set; } = new Navigator();
-
         public void IdHandle()
         {
             selectedUser.Id = IdHandlers.Id;
@@ -206,5 +212,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     break;
             }
         }
+        #endregion
     }
 }

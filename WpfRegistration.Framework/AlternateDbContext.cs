@@ -11,7 +11,6 @@ namespace WpfRegistration.EntityFramework
 {
     public class AlternateDbContext
     {
-
         public static ObservableCollection<UserModel> GetUsers()
         {
             string query = @"SELECT * FROM [WpfTestDb].[dbo].[Users]";

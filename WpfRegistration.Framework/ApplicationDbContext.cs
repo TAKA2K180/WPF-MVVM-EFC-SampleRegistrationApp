@@ -17,7 +17,7 @@ namespace WpfRegistration.EntityFramework
         }
         #endregion
 
-        #region Variable declarations
+        #region Db Sets
         public DbSet<UserModel> Users { get; set; }
         public DbSet<AccountModel> Accounts { get; set; }
         #endregion

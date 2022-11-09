@@ -28,13 +28,13 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Row="1" Margin="10 0 0 0"  Grid.Column="0" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Home}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Home"/>
+            <RadioButton Grid.Row="1" Margin="10 0 0 0"  Grid.Column="0" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Home}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Home" FontSize="20"/>
 
-            <RadioButton Grid.Row="1" Margin="10 0 0 0" Grid.Column="1" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Profile}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Profile"/>
+            <RadioButton Grid.Row="1" Margin="10 0 0 0" Grid.Column="1" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Profile}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Profile" FontSize="20"/>
 
-            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0" Grid.Column="2" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerInfo}" Content="Tracer info"/>
-            
-            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0" Grid.Column="3" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerEdit}" Content="Tracer info editor "/>
+            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0" Grid.Column="2" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerInfo}" Content="Tracer info" FontSize="20"/>
+
+            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0" Grid.Column="3" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerEdit}" Content="Tracer info editor " FontSize="20"/>
 
         </Grid>
     </Grid>

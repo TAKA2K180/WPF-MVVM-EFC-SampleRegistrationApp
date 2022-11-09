@@ -15,10 +15,13 @@ namespace WpfRegistrationApp.WPF.ViewModels
 {
     public class TracerEditViewModel : BaseViewModel
     {
+        #region Variables
         private IServiceAgent _serviceAgent;
         IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
         UserModel user = new UserModel();
+        #endregion
 
+        #region Properties
         private ObservableCollection<UserModel> _users;
         public ObservableCollection<UserModel> Users
         {
@@ -108,38 +111,50 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         private CustomCommand _updateCommand;
 
+       
+
+        public CustomCommand SubmitCommand
+        { get; set; }
+        #endregion
+
+        #region Constructor
         public TracerEditViewModel(IServiceAgent serviceAgent)
         {
             this._serviceAgent = serviceAgent;
 
             SubmitCommand = new CustomCommand(this.Update);
         }
+        #endregion
 
-        public CustomCommand SubmitCommand
-        { get; set; }
-
+        #region Methods
         public void Update(dynamic obj)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure about the information you have entered?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
-            switch (result)
+            if (this.FirstName == null || this.FirstName == "" && this.LastName == null || this.LastName == "" && this.Address == null && this.UserName == null )
             {
-                case MessageBoxResult.Yes:
-                    try
-                    {
-                        dataService.Update(this.Id, new UserModel() { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, Email = this.Email, Address = this.Address, DateFirstDose = this.DateFirstDose, NumberofShots = this.NumberofShots, VaccineName = this.VaccineName, isBoosterShot = this.IsBooster, isVaccinated = this.IsVaccinated });
-                        MessageBox.Show("Profile updated");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    break;
-                case MessageBoxResult.No:
-                    break;
-                default:
-                    break;
+                MessageBox.Show("Please fill up required fields", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Are you sure about the information you have entered?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        try
+                        {
+                            dataService.Update(this.Id, new UserModel() { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, Email = this.Email, Address = this.Address, DateFirstDose = this.DateFirstDose, NumberofShots = this.NumberofShots, VaccineName = this.VaccineName, isBoosterShot = this.IsBooster, isVaccinated = this.IsVaccinated });
+                            MessageBox.Show("Profile updated");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
         public void LoadUserById()
         {
@@ -164,7 +179,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
             {
                 NotifyError(error.Message, error);
             }
-            // isbusy = false;
         }
         private void NotifyError(string message, Exception error)
         {
@@ -190,5 +204,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 }
             }
         }
+        #endregion
     }
 }
