@@ -165,11 +165,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
         {
             //MessageBox.Show(message);
         }
-        public void IdHandle()
-        {
-            selectedUser.Id = IdHandlers.Id;
-            selectedUser.FirstName = IdHandlers.FirstName;
-        }
 
         public void SelectedItem(UserModel user)
         {

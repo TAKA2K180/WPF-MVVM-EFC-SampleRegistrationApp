@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfRegistrationApp.WPF.Controls"
              xmlns:nav="clr-namespace:WpfRegistrationApp.WPF.State.Navigators"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              FontFamily="Roboto"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -15,26 +16,51 @@
         </Grid.RowDefinitions>
         <TextBlock Text="WPF Registration" Grid.Row="0" Foreground="#eceff1" FontSize="30" FontFamily="Roboto" Background="{StaticResource MaterialDesignDarkBackground}"/>
 
-        <Grid Grid.Row="1" Background="{StaticResource MaterialDesignBody}">
+        <Grid Grid.Row="1" Background="{StaticResource MaterialDesignShadowBrush}">
             <Grid.Resources>
                 <Style TargetType="RadioButton" BasedOn="{StaticResource NavButton}"/>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Row="1" Margin="10 0 0 0"  Grid.Column="0" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Home}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Home" FontSize="20"/>
+            <materialDesign:PackIcon Width="25"
+                                     Height="25"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" Kind="Home" Grid.Row="1" Grid.Column="0" Foreground="White"/>
+            
+            <RadioButton  Grid.Row="1" Margin="0 0 10 0"  Grid.Column="1" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Home}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Home" FontSize="20"/>
+            
+            <materialDesign:PackIcon Width="25"
+                                     Height="25"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" Kind="FaceMaleProfile" Grid.Row="1" Grid.Column="2" Foreground="White"/>
 
-            <RadioButton Grid.Row="1" Margin="10 0 0 0" Grid.Column="1" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Profile}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Profile" FontSize="20"/>
+            <RadioButton Grid.Row="1" Margin="0 0 10 0" Grid.Column="3" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Profile}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Profile" FontSize="20"/>
 
-            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0" Grid.Column="2" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerInfo}" Content="Tracer info" FontSize="20"/>
+            <materialDesign:PackIcon Width="25"
+                                     Height="25"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" Kind="Syringe" Grid.Row="1" Grid.Column="4" Foreground="White"/>
 
-            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0" Grid.Column="3" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerEdit}" Content="Tracer info editor " FontSize="20"/>
+            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 10 0" Grid.Column="5" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerInfo}" Content="Tracer info" FontSize="20"/>
+
+            <materialDesign:PackIcon Width="25"
+                                     Height="25"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" Kind="Wrench" Grid.Row="1" Grid.Column="6" Foreground="White"/>
+
+            <RadioButton Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 0" Grid.Column="7" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerEdit}" Content="Tracer info editor " FontSize="20"/>
 
         </Grid>
     </Grid>

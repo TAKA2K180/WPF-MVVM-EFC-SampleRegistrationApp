@@ -73,7 +73,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
@@ -83,6 +83,8 @@
             <Button Background="{StaticResource MaterialDesignLightBackground}" Foreground="{StaticResource MaterialDesignDarkBackground}" Margin="0 0 3 0" Grid.Column="2" Content="EDIT" FontSize="20" FontFamily="Roboto" DataContext="{Binding navigator}" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.TracerEdit}"/>-->
 
             <Button Background="{StaticResource MaterialDesignLightBackground}" Foreground="{StaticResource MaterialDesignDarkBackground}" Margin="0 0 3 0" Grid.Column="1" Content="DELETE" FontSize="20" FontFamily="Roboto" Command="{Binding DeleteCommand}"/>
+
+            <TextBox Grid.Column="3" BorderBrush="{StaticResource MaterialDesignTextBoxBorder}" Foreground="{StaticResource MaterialDesignTextAreaBorder}" Background="White" Margin="0 5 5 5"/>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
