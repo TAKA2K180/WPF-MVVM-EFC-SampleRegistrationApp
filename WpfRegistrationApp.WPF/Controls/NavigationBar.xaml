@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <TextBlock Text="WPF Registration" Grid.Row="0" Foreground="#eceff1" FontSize="30" FontFamily="Roboto" Background="{StaticResource MaterialDesignDarkBackground}"/>
 
-        <Grid Grid.Row="1" Background="{StaticResource MaterialDesignShadowBrush}">
+        <Grid Grid.Row="1" Background="#1b1b1b">
             <Grid.Resources>
                 <Style TargetType="RadioButton" BasedOn="{StaticResource NavButton}"/>
             </Grid.Resources>

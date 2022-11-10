@@ -3,10 +3,12 @@
     <!--Colors-->
     <Color x:Key="ColorPrimary">#37474f</Color>
     <Color x:Key="ColorSecondary">#546e7a</Color>
+    <Color x:Key="Background">#1b1b1b</Color>
     <!--Brushes-->
     <SolidColorBrush x:Key="BrushColorPrimary" Color="{StaticResource ColorPrimary}"/>
     <SolidColorBrush x:Key="BrushColorSecondary" Color="{StaticResource ColorSecondary}"/>
     <SolidColorBrush x:Key="BrushColorText" Color="#eceff1"/>
+    <SolidColorBrush x:Key="BgColor" Color="{StaticResource Background}"/>
     <!--Background-->
     <!--TextColor-->
     <!--<Setter x:Key="FontColor" Property="Fontcolor">
