@@ -19,5 +19,7 @@ namespace WpfRegistration.Domain.Models
         public int NumberofShots { get; set; }
         public string QrCode { get; set; }
         public DateTime DateFirstDose { get; set; }
+
+        public string Search { get; set; }
     }
 }

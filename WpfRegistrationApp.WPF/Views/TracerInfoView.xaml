@@ -30,12 +30,12 @@
                         <Grid DockPanel.Dock="Top" Height="30" Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="1.2*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" HorizontalAlignment="Center" FontFamily="Roboto" FontSize="20" Foreground="{DynamicResource MaterialDesignDarkBackground}">ID</Label>
+                            <Label Grid.Column="0" HorizontalAlignment="Center" FontFamily="Roboto" FontSize="20" Foreground="{DynamicResource MaterialDesignDarkBackground}"></Label>
                             <Label Grid.Column="1" HorizontalAlignment="Center" FontFamily="Roboto" FontSize="20" Foreground="{DynamicResource MaterialDesignDarkBackground}">First Name</Label>
                             <Label Grid.Column="2" HorizontalAlignment="Center" FontFamily="Roboto" FontSize="20" Foreground="{DynamicResource MaterialDesignDarkBackground}">Last Name</Label>
                             <Label Grid.Column="3" HorizontalAlignment="Center" FontFamily="Roboto" FontSize="20" Foreground="{DynamicResource MaterialDesignDarkBackground}">Address</Label>
@@ -73,7 +73,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
@@ -84,7 +84,7 @@
 
             <Button Background="{StaticResource MaterialDesignLightBackground}" Foreground="{StaticResource MaterialDesignDarkBackground}" Margin="0 0 3 0" Grid.Column="1" Content="DELETE" FontSize="20" FontFamily="Roboto" Command="{Binding DeleteCommand}"/>
 
-            <TextBox Grid.Column="3" BorderBrush="{StaticResource MaterialDesignTextBoxBorder}" Foreground="{StaticResource MaterialDesignTextAreaBorder}" Background="White" Margin="0 5 5 5"/>
+            <!--<TextBox Name="txtSearch" Grid.Column="3" BorderBrush="{StaticResource MaterialDesignTextBoxBorder}" Foreground="{StaticResource MaterialDesignTextAreaBorder}" Background="White" Margin="0 5 5 5" FontSize="15" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"/>-->
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>

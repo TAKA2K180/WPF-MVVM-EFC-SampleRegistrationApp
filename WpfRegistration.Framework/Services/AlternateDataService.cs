@@ -17,5 +17,10 @@ namespace WpfRegistration.EntityFramework.Services
         {
             return AlternateDbContext.GetUsersById();
         }
+
+        public static ObservableCollection<UserModel> FetchUserbySearch()
+        {
+            return AlternateDbContext.GetUsersBySearch();
+        }
     }
 }

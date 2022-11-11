@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MSMQ.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -10,6 +12,7 @@ using WpfRegistration.EntityFramework;
 using WpfRegistration.EntityFramework.Services;
 using WpfRegistrationApp.WPF.Commands;
 using WpfRegistrationApp.WPF.State;
+using WpfRegistrationApp.WPF.State.Helpers;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
@@ -19,6 +22,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
         private IServiceAgent _serviceAgent;
         IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
         UserModel user = new UserModel();
+        LogEventHelpers LogEventHelpers = new LogEventHelpers();
+        MsmqHelper msmqHelper = new MsmqHelper();
         #endregion
 
         #region Properties
@@ -143,10 +148,13 @@ namespace WpfRegistrationApp.WPF.ViewModels
                         {
                             dataService.Update(this.Id, new UserModel() { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, Email = this.Email, Address = this.Address, DateFirstDose = this.DateFirstDose, NumberofShots = this.NumberofShots, VaccineName = this.VaccineName, isBoosterShot = this.IsBooster, isVaccinated = this.IsVaccinated });
                             MessageBox.Show("Profile updated");
+                            msmqHelper.SendMessage("Record updated " + this.FirstName + " " + this.LastName + "");
+                            LogEventHelpers.LogEventMessageInfo("Record updated:\nFirst Name: " + this.FirstName + "\nLast Name: " + this.LastName + "\nAddress: " + this.Address + "\nVaccine: " + this.VaccineName + "");
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
+                            LogEventHelpers.LogEventMessageError(ex.Message);
                         }
                         break;
                     case MessageBoxResult.No:
@@ -164,7 +172,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                LogEventHelpers.LogEventMessageError(ex.Message);
             }
         }
         private void UserLoaded(ObservableCollection<UserModel> users, Exception error)
@@ -182,6 +190,14 @@ namespace WpfRegistrationApp.WPF.ViewModels
         }
         private void NotifyError(string message, Exception error)
         {
+            if (message == "Loaded")
+            {
+                //LogEventHelpers.LogEventMessageInfo(message);
+            }
+            else
+            {
+                LogEventHelpers.LogEventMessageError(message);
+            }
         }
         private void LoadUser()
         {

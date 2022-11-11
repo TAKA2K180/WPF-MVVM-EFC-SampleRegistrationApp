@@ -15,6 +15,10 @@ using WpfRegistrationApp.WPF.State.Navigators;
 using WpfRegistrationApp.WPF.State;
 using System.Windows.Input;
 using System.Reflection;
+using MSMQ.Messaging;
+using System.Diagnostics;
+using System.Windows.Data;
+using WpfRegistrationApp.WPF.State.Helpers;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
@@ -22,10 +26,15 @@ namespace WpfRegistrationApp.WPF.ViewModels
     {
         #region Variables
         private IServiceAgent _serviceAgent;
+        private ICollectionView phrasesView;
         IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
+        private string filter;
+        LogEventHelpers logEventHelpers = new LogEventHelpers();
+        MsmqHelper msmqHelper = new MsmqHelper(); 
         #endregion
 
         #region Properties
+        public ObservableCollection<string> Phrases { get; private set; }
         private ObservableCollection<UserModel> _users;
         public ObservableCollection<UserModel> Users
         {
@@ -57,7 +66,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
         {
             get { return _id; }
             set { _id = value; OnPropertyChanged("ID"); }
-
         }
 
         private string _firstName;
@@ -88,6 +96,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
         private DateTime _dateFirstDose;
 
         public CustomCommand DeleteCommand { get; set; }
+
+        public CustomCommand SearchCommand { get; set; }
 
         public DateTime DateFirstDose
         {
@@ -134,6 +144,22 @@ namespace WpfRegistrationApp.WPF.ViewModels
             get { return _isVaccinated; }
             set { _isVaccinated = value; }
         }
+        public string Filter
+        {
+            get
+            {
+                return filter;
+            }
+            set
+            {
+                if (value != filter)
+                {
+                    filter = value;
+                    phrasesView.Refresh();
+                    OnPropertyChanged("Filter");
+                }
+            }
+        }
         #endregion
 
         #region Constructor
@@ -163,7 +189,14 @@ namespace WpfRegistrationApp.WPF.ViewModels
         }
         private void NotifyError(string message, Exception error)
         {
-            //MessageBox.Show(message);
+            if (message == "Loaded")
+            {
+                //logEventHelpers.LogEventMessageInfo(message);
+            }
+            else
+            {
+                logEventHelpers.LogEventMessageError(message);
+            }
         }
 
         public void SelectedItem(UserModel user)
@@ -192,6 +225,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 case MessageBoxResult.Yes:
                     try
                     {
+                        msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
+                       logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + this.VaccineName + "");
                         dataService.Delete(IdHandlers.Id);
                         MessageBox.Show("User deleted");
                         LoadUsers();
@@ -199,6 +234,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
+                        logEventHelpers.LogEventMessageError(ex.Message);
                     }
                     break;
                 case MessageBoxResult.No:
@@ -207,6 +243,39 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     break;
             }
         }
+
+        public void SearchItem(string search)
+        {
+            try
+            {
+                SearchHandler.Search = search;
+                if (search == "")
+                {
+                    LoadUsers();
+                }
+                else
+                {
+                    _serviceAgent.GetUserbySearch((_users, error) => SearchLoaded(_users, error));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void SearchLoaded(ObservableCollection<UserModel> users, Exception error)
+        {
+            if (error == null)
+            {
+                this.Users = users;
+                NotifyError("Loaded", null);
+            }
+            else
+            {
+                NotifyError(error.Message, error);
+            }
+        }
+
         #endregion
     }
 }

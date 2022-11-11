@@ -12,6 +12,10 @@ using WpfRegistrationApp.WPF.State.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Security.Cryptography.X509Certificates;
+using MaterialDesignThemes.Wpf;
+using System.Diagnostics;
+using System.IO;
+using MSMQ.Messaging;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
@@ -20,6 +24,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
         #region Variables
         IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
         public static readonly PasswordHelper PasswordHelper = new PasswordHelper();
+        LogEventHelpers logEventHelpers = new LogEventHelpers();
+        MsmqHelper msmqHelper = new MsmqHelper();
         #endregion
 
         #region Properties
@@ -120,14 +126,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
         }
         #endregion
 
-        #region PropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
-
         #region Methods
         public void Create(dynamic obj)
         {
@@ -145,20 +143,19 @@ namespace WpfRegistrationApp.WPF.ViewModels
                         {
                             dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, PasswordHash = "1234", VaccineName = this.VaccineName, Address = this.Address });
                             MessageBox.Show("Done.");
-                            ClearAll();
+                            msmqHelper.SendMessage("New Record "+this.FirstName+" "+this.LastName+"");
+                            logEventHelpers.LogEventMessageInfo("New Record:\nFirst Name: " + this.FirstName+"\nLast Name: "+this.LastName+"\nAddress: "+this.Address+"\nVaccine: "+this.VaccineName+"");
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
+                            logEventHelpers.LogEventMessageError(ex.Message);
                         }
                         break;
-
                     case MessageBoxResult.No:
                         break;
-
                 }
             }
-            
         }
 
         public void ClearAll()
@@ -173,6 +170,9 @@ namespace WpfRegistrationApp.WPF.ViewModels
             this.IsBoosterShot = default;
             this.IsVaccinated = default;
         }
+
+        
+
         #endregion
     }
 }

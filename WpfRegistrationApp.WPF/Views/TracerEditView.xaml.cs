@@ -24,8 +24,8 @@ namespace WpfRegistrationApp.WPF.Views
         private readonly TracerEditViewModel viewModel;
         IServiceAgent sa = new ServiceAgent();
         int numberOfVaccine = 0;
-        bool isVaccinated = false;
-        bool isBooster = false;
+        bool isVaccinated;
+        bool isBooster;
         public TracerEditView()
         {
             InitializeComponent();

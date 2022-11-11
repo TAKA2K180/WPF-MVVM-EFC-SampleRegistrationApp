@@ -10,6 +10,7 @@ namespace WpfRegistration.EntityFramework.Services
     {
         void GetUsers(Action<ObservableCollection<UserModel>, Exception> completed);
         void GetUserbyId(Action<ObservableCollection<UserModel>, Exception> completed);
+        void GetUserbySearch(Action<ObservableCollection<UserModel>, Exception> completed);
     }
     public class ServiceAgent : IServiceAgent
     {
@@ -31,6 +32,19 @@ namespace WpfRegistration.EntityFramework.Services
             try
             {
                 ObservableCollection<UserModel> users = AlternateDataService.FetchUserbyId();
+                completed(users, null);
+            }
+            catch (Exception ex)
+            {
+                completed(null, ex);
+            }
+        }
+
+        public void GetUserbySearch(Action<ObservableCollection<UserModel>, Exception> completed)
+        {
+            try
+            {
+                ObservableCollection<UserModel> users = AlternateDataService.FetchUserbySearch();
                 completed(users, null);
             }
             catch (Exception ex)
