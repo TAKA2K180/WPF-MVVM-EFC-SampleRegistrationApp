@@ -70,7 +70,7 @@
 
         <DatePicker x:Name="dtpFirstDose" Grid.Column="3" Grid.Row="7" FontSize="27" SelectedDate="{Binding DateFirstDose}" DisplayDate="{x:Static sys:DateTime.Now}"/>
 
-        <Button Style="{DynamicResource MaterialDesignFlatLightBgButton}" Background="{DynamicResource MaterialDesignDarkBackground}" Foreground="{DynamicResource MaterialDesignLightBackground}" x:Name="btnSubmit" Content="Submit" Grid.Column="3" Grid.Row="9" FontSize="20" Command="{Binding SubmitCommand}"/>
+        <Button Style="{DynamicResource MaterialDesignFlatLightBgButton}" Background="{DynamicResource MaterialDesignDarkBackground}" Foreground="{DynamicResource MaterialDesignLightBackground}" x:Name="btnSubmit" Content="SUBMIT" Grid.Column="3" Grid.Row="9" FontSize="20" Command="{Binding SubmitCommand}"/>
 
     </Grid>
 </UserControl>

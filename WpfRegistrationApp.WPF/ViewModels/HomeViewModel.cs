@@ -142,7 +142,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
                         try
                         {
                             dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, VaccineName = this.VaccineName, Address = this.Address });
-                            MessageBox.Show("Done.", "WPF Tracer App", MessageBoxButton.OK);
+                            MessageBox.Show("Tracer record submitted", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Information);
                             msmqHelper.SendMessage("New Record "+this.FirstName+" "+this.LastName+"");
                             logEventHelpers.LogEventMessageInfo("New Record:\nFirst Name: " + this.FirstName+"\nLast Name: "+this.LastName+"\nAddress: "+this.Address+"\nVaccine: "+this.VaccineName+"");
                         }

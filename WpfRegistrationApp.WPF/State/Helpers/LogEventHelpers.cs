@@ -10,20 +10,20 @@ namespace WpfRegistrationApp.WPF.State.Helpers
         public void LogEventMessageInfo(string msg)
         {
             EventLog log = new EventLog();
-            log.Source = "WPF event logs";
+            log.Source = "WPF Tracer App event logs";
             log.WriteEntry(msg, EventLogEntryType.Information);
         }
 
         public void LogEventMessageError(string msg)
         {
             EventLog log = new EventLog();
-            log.Source = "WPF event logs";
+            log.Source = "WPF Tracer App event logs";
             log.WriteEntry(msg, EventLogEntryType.Error);
         }
         public void LogEventMessageWarning(string msg)
         {
             EventLog log = new EventLog();
-            log.Source = "WPF event logs";
+            log.Source = "WPF Tracer App event logs";
             log.WriteEntry(msg, EventLogEntryType.Warning);
         }
     }

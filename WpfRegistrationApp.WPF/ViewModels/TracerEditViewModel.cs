@@ -14,6 +14,7 @@ using WpfRegistration.EntityFramework.Services;
 using WpfRegistrationApp.WPF.Commands;
 using WpfRegistrationApp.WPF.State;
 using WpfRegistrationApp.WPF.State.Helpers;
+using WpfRegistrationApp.WPF.State.Navigators;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
@@ -25,6 +26,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
         UserModel user = new UserModel();
         LogEventHelpers LogEventHelpers = new LogEventHelpers();
         MsmqHelper msmqHelper = new MsmqHelper();
+        INavigator _navigator = new Navigator();
+        int passCounter = 0;
         #endregion
 
         #region Properties
@@ -41,6 +44,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
             get { return _id; }
             set { _id = value; OnPropertyChanged("ID"); }
         }
+        
 
         private string _firstName;
         public string FirstName
@@ -72,7 +76,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public DateTime DateFirstDose
         {
             get { return _dateFirstDose; }
-            set { _dateFirstDose = value; OnPropertyChanged(Convert.ToString(DateFirstDose)); }
+            set { _dateFirstDose = value; OnPropertyChanged("DateFirstDose"); }
         }
 
         private string _userName;
@@ -116,11 +120,17 @@ namespace WpfRegistrationApp.WPF.ViewModels
         }
 
         private CustomCommand _updateCommand;
-
-       
-
         public CustomCommand SubmitCommand
         { get; set; }
+
+        private bool _isEnabled;
+
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set { _isEnabled = value; OnPropertyChanged("IsEnabled"); }
+        }
+
         #endregion
 
         #region Constructor
@@ -209,23 +219,44 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 var getId = await Task.WhenAll(dataService.Get(IdHandlers.Id));
                 List<UserModel> users = new List<UserModel>();
                 users = getId.ToList();
+                ExceptionHelper.exceptionCounter++;
                 foreach (var user in users)
                 {
-                    this.FirstName = user.FirstName;
-                    this.LastName = user.LastName;
-                    this.Address = user.Address;
-                    this.Email = user.Email;
-                    this.UserName = user.Username;
-                    this.DateFirstDose = user.DateFirstDose;
-                    this.NumberofShots = user.NumberofShots;
-                    this.VaccineName = user.VaccineName;
-                    this.IsBooster = user.isBoosterShot;
-                    this.IsVaccinated = user.isVaccinated;
+                    if (user != null)
+                    {
+                        this.FirstName = user.FirstName;
+                        this.LastName = user.LastName;
+                        this.Address = user.Address;
+                        this.Email = user.Email;
+                        this.UserName = user.Username;
+                        this.DateFirstDose = user.DateFirstDose;
+                        this.NumberofShots = user.NumberofShots;
+                        this.VaccineName = user.VaccineName;
+                        this.IsBooster = user.isBoosterShot;
+                        this.IsVaccinated = user.isVaccinated;
+                        this.IsEnabled = true;
+                    }
+                    else
+                    {
+                        if (ExceptionHelper.exceptionCounter <= 1)
+                        {
+                            MessageBox.Show("Please select a user first in Tracer Info menu", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Error);
+                            this.IsEnabled = false;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 LogEventHelpers.LogEventMessageError(ex.Message);
+            }
+        }
+
+        public void Onexit()
+        {
+            if (_navigator.currentViewmodel != new TracerEditViewModel(_serviceAgent))
+            {
+
             }
         }
         #endregion

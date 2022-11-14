@@ -53,14 +53,5 @@ namespace WpfRegistrationApp.WPF.Views
             TracerViewModel tracer = new TracerViewModel(sa);
             tracer.SelectedItem((UserModel)item.SelectedItem);
         }
-
-        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            //if (e.Key == Key.Enter)
-            //{
-            //    TracerViewModel tracer = new TracerViewModel(sa);
-            //    tracer.SearchItem(txtSearch.Text);
-            //}
-        }
     }
 }

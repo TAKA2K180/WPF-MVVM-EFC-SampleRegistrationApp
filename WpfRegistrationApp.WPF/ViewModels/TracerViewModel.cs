@@ -165,7 +165,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public TracerViewModel(IServiceAgent serviceAgent)
         {
             this._serviceAgent = serviceAgent;
-            this.DeleteCommand = new CustomCommand(DeleteItem);
+            this.DeleteCommand = new CustomCommand(Delete);
             GetAllUserlist(); 
         }
         #endregion
@@ -225,17 +225,29 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         public async Task GetUsersAsync()
         {
-            var Userlist = await Task.WhenAll(dataService.Getall());
-            List<UserModel> userModels = new List<UserModel>();
-            foreach (var user in Userlist)
+            try
             {
-                var userlisting = user.ToList();
-                userModels = userlisting;
+                var Userlist = await Task.WhenAll(dataService.Getall());
+                List<UserModel> userModels = new List<UserModel>();
+                foreach (var user in Userlist)
+                {
+                    var userlisting = user.ToList();
+                    userModels = userlisting;
+                }
+                ObservableCollection<UserModel> users = new ObservableCollection<UserModel>(userModels);
+                this.Users = users;
             }
-            ObservableCollection<UserModel> users = new ObservableCollection<UserModel>(userModels);
-            this.Users = users;
+            catch (Exception ex)
+            {
+                logEventHelpers.LogEventMessageError(ex.Message);
+            }
+            
         }
-        public void DeleteItem(dynamic obj)
+        public void Delete(dynamic obj)
+        {
+            DeleteItem();
+        }
+        public async Task DeleteItem()
         {
             MessageBoxResult result = MessageBox.Show("Are you sure you want to the delete the selected user?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
             switch (result)
@@ -245,9 +257,9 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     {
                         msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
                        logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + this.VaccineName + "");
-                        dataService.Delete(IdHandlers.Id);
-                        MessageBox.Show("User deleted");
-                        LoadUsers();
+                        await dataService.Delete(IdHandlers.Id);
+                        MessageBox.Show("User deleted", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Information);
+                        await LoadUsers();
                     }
                     catch (Exception ex)
                     {
@@ -261,39 +273,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     break;
             }
         }
-
-        public void SearchItem(string search)
-        {
-            try
-            {
-                SearchHandler.Search = search;
-                if (search == "")
-                {
-                    LoadUsers();
-                }
-                else
-                {
-                    _serviceAgent.GetUserbySearch((_users, error) => SearchLoaded(_users, error));
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        private void SearchLoaded(ObservableCollection<UserModel> users, Exception error)
-        {
-            if (error == null)
-            {
-                this.Users = users;
-                NotifyError("Loaded", null);
-            }
-            else
-            {
-                NotifyError(error.Message, error);
-            }
-        }
-
         #endregion
     }
 }
