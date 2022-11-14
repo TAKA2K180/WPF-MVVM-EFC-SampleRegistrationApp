@@ -32,7 +32,7 @@ namespace WpfRegistrationApp.WPF.Views
             viewModel = new TracerEditViewModel(sa);
             DataContext = this.viewModel;
 
-            viewModel.LoadUserById();
+            //viewModel.LoadUserById();
 
             cbVaccineName.ItemsSource = Enum.GetValues(typeof(VaccineNames.Vaccines));
             NumberOfVaccine();

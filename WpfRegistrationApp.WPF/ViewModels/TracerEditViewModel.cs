@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using WpfRegistration.Domain.Models;
 using WpfRegistration.Domain.Services;
@@ -79,7 +80,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public string UserName
         {
             get { return _userName; }
-            set { _userName = value; OnPropertyChanged(UserName); }
+            set { _userName = value; OnPropertyChanged(nameof(UserName)); }
         }
 
         private string _email;
@@ -87,7 +88,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public string Email
         {
             get { return _email; }
-            set { _email = value; OnPropertyChanged(UserName); }
+            set { _email = value; OnPropertyChanged(nameof(Email)); }
         }
 
         private int _numberofShots;
@@ -95,7 +96,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public int NumberofShots
         {
             get { return _numberofShots; }
-            set { _numberofShots = value; }
+            set { _numberofShots = value; OnPropertyChanged("NumberofShots"); }
         }
 
         private bool _isBooster;
@@ -103,7 +104,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public bool IsBooster
         {
             get { return _isBooster; }
-            set { _isBooster = value; }
+            set { _isBooster = value; OnPropertyChanged("IsBooster"); }
         }
 
         private bool _isVaccinated;
@@ -111,7 +112,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public bool IsVaccinated
         {
             get { return _isVaccinated; }
-            set { _isVaccinated = value; }
+            set { _isVaccinated = value; OnPropertyChanged("IsVaccinated"); }
         }
 
         private CustomCommand _updateCommand;
@@ -128,6 +129,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
             this._serviceAgent = serviceAgent;
 
             SubmitCommand = new CustomCommand(this.Update);
+
+            LoadUserAsync();
         }
         #endregion
 
@@ -164,30 +167,30 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 }
             }
         }
-        public void LoadUserById()
-        {
-            try
-            {
-                _serviceAgent.GetUserbyId((_users, error) => UserLoaded(_users, error));
-            }
-            catch (Exception ex)
-            {
-                LogEventHelpers.LogEventMessageError(ex.Message);
-            }
-        }
-        private void UserLoaded(ObservableCollection<UserModel> users, Exception error)
-        {
-            if (error == null)
-            {
-                this.Users = users;
-                NotifyError("Loaded", null);
-                LoadUser();
-            }
-            else
-            {
-                NotifyError(error.Message, error);
-            }
-        }
+        //public void LoadUserById()
+        //{
+        //    try
+        //    {
+        //        _serviceAgent.GetUserbyId((_users, error) => UserLoaded(_users, error));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogEventHelpers.LogEventMessageError(ex.Message);
+        //    }
+        //}
+        //private void UserLoaded(ObservableCollection<UserModel> users, Exception error)
+        //{
+        //    if (error == null)
+        //    {
+        //        this.Users = users;
+        //        NotifyError("Loaded", null);
+        //        LoadUser();
+        //    }
+        //    else
+        //    {
+        //        NotifyError(error.Message, error);
+        //    }
+        //}
         private void NotifyError(string message, Exception error)
         {
             if (message == "Loaded")
@@ -199,25 +202,30 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 LogEventHelpers.LogEventMessageError(message);
             }
         }
-        private void LoadUser()
+        public async Task LoadUserAsync()
         {
-            List<UserModel> users = new List<UserModel>();
-            if (Users != null)
+            try
             {
-                users = Users.ToList();
-                foreach (var item in users)
+                var getId = await Task.WhenAll(dataService.Get(IdHandlers.Id));
+                List<UserModel> users = new List<UserModel>();
+                users = getId.ToList();
+                foreach (var user in users)
                 {
-                    this._firstName = item.FirstName;
-                    this._lastName = item.LastName;
-                    this._address = item.Address;
-                    this._email = item.Email;
-                    this._userName = item.Username;
-                    this._dateFirstDose = item.DateFirstDose;
-                    this._numberofShots = item.NumberofShots;
-                    this.VaccineName = item.VaccineName;
-                    this.IsBooster = item.isBoosterShot;
-                    this.IsVaccinated = item.isVaccinated;
+                    this.FirstName = user.FirstName;
+                    this.LastName = user.LastName;
+                    this.Address = user.Address;
+                    this.Email = user.Email;
+                    this.UserName = user.Username;
+                    this.DateFirstDose = user.DateFirstDose;
+                    this.NumberofShots = user.NumberofShots;
+                    this.VaccineName = user.VaccineName;
+                    this.IsBooster = user.isBoosterShot;
+                    this.IsVaccinated = user.isVaccinated;
                 }
+            }
+            catch (Exception ex)
+            {
+                LogEventHelpers.LogEventMessageError(ex.Message);
             }
         }
         #endregion

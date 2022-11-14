@@ -171,9 +171,10 @@ namespace WpfRegistrationApp.WPF.ViewModels
         #endregion
 
         #region Methods
-        public void LoadUsers()
+        public async Task LoadUsers()
         {
-            _serviceAgent.GetUsers((_users, error) => UserLoaded(_users, error));
+            //_serviceAgent.GetUsers((_users, error) => UserLoaded(_users, error));
+            await GetAllUserlist();
         }
         private void UserLoaded(ObservableCollection<UserModel> users, Exception error)
         {
@@ -224,8 +225,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         public async Task GetUsersAsync()
         {
-            //var watch = System.Diagnostics.Stopwatch.StartNew();
-
             var Userlist = await Task.WhenAll(dataService.Getall());
             List<UserModel> userModels = new List<UserModel>();
             foreach (var user in Userlist)
@@ -235,10 +234,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
             ObservableCollection<UserModel> users = new ObservableCollection<UserModel>(userModels);
             this.Users = users;
-
-            //watch.Stop();
-            //var elapsed = watch.ElapsedMilliseconds;
-            //MessageBox.Show("Elapsed time is: " + elapsed + "ms");
         }
         public void DeleteItem(dynamic obj)
         {
