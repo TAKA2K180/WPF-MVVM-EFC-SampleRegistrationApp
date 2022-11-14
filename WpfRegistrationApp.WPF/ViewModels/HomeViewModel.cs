@@ -141,8 +141,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     case MessageBoxResult.Yes:
                         try
                         {
-                            dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, PasswordHash = "1234", VaccineName = this.VaccineName, Address = this.Address });
-                            MessageBox.Show("Done.");
+                            dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, VaccineName = this.VaccineName, Address = this.Address });
+                            MessageBox.Show("Done.", "WPF Tracer App", MessageBoxButton.OK);
                             msmqHelper.SendMessage("New Record "+this.FirstName+" "+this.LastName+"");
                             logEventHelpers.LogEventMessageInfo("New Record:\nFirst Name: " + this.FirstName+"\nLast Name: "+this.LastName+"\nAddress: "+this.Address+"\nVaccine: "+this.VaccineName+"");
                         }
@@ -157,22 +157,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 }
             }
         }
-
-        public void ClearAll()
-        {
-            this.FirstName = "";
-            this.LastName = "";
-            this.EmailAdd = "";
-            this.Address = "";
-            this.DateFirstDose = DateTime.Now;
-            this.NumberofDose = default;
-            this.VaccineName = "";
-            this.IsBoosterShot = default;
-            this.IsVaccinated = default;
-        }
-
-        
-
         #endregion
     }
 }

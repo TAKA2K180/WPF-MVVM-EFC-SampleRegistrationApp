@@ -34,7 +34,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
         #endregion
 
         #region Properties
-        public ObservableCollection<string> Phrases { get; private set; }
         private ObservableCollection<UserModel> _users;
         public ObservableCollection<UserModel> Users
         {
@@ -167,6 +166,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         {
             this._serviceAgent = serviceAgent;
             this.DeleteCommand = new CustomCommand(DeleteItem);
+            GetAllUserlist(); 
         }
         #endregion
 
@@ -217,6 +217,29 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
         }
 
+        public async Task GetAllUserlist()
+        {
+            await GetUsersAsync();
+        }
+
+        public async Task GetUsersAsync()
+        {
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            var Userlist = await Task.WhenAll(dataService.Getall());
+            List<UserModel> userModels = new List<UserModel>();
+            foreach (var user in Userlist)
+            {
+                var userlisting = user.ToList();
+                userModels = userlisting;
+            }
+            ObservableCollection<UserModel> users = new ObservableCollection<UserModel>(userModels);
+            this.Users = users;
+
+            //watch.Stop();
+            //var elapsed = watch.ElapsedMilliseconds;
+            //MessageBox.Show("Elapsed time is: " + elapsed + "ms");
+        }
         public void DeleteItem(dynamic obj)
         {
             MessageBoxResult result = MessageBox.Show("Are you sure you want to the delete the selected user?", "WPF Tracer App", MessageBoxButton.YesNoCancel);

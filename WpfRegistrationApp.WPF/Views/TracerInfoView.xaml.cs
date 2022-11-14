@@ -35,7 +35,7 @@ namespace WpfRegistrationApp.WPF.Views
             _vm = new TracerViewModel(sa);
             DataContext = this._vm;
 
-            _vm.LoadUsers();
+           // _vm.LoadUsers();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
