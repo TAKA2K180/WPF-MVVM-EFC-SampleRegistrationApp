@@ -149,7 +149,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
-                            logEventHelpers.LogEventMessageError(ex.Message);
+                            logEventHelpers.LogEventMessageError(ex.ToString());
                         }
                         break;
                     case MessageBoxResult.No:

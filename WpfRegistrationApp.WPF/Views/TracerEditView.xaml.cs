@@ -32,10 +32,13 @@ namespace WpfRegistrationApp.WPF.Views
             viewModel = new TracerEditViewModel(sa);
             DataContext = this.viewModel;
 
-            //viewModel.LoadUserById();
-
             cbVaccineName.ItemsSource = Enum.GetValues(typeof(VaccineNames.Vaccines));
             NumberOfVaccine();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void chkVaccinated_Checked(object sender, RoutedEventArgs e)
@@ -79,6 +82,16 @@ namespace WpfRegistrationApp.WPF.Views
         {
             //cbNumberofVaccines.Items.Clear();
             
+        }
+
+        void window_Closing(object sender, global::System.ComponentModel.CancelEventArgs e)
+        {
+            
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            viewModel.OnExit();
         }
     }
 }

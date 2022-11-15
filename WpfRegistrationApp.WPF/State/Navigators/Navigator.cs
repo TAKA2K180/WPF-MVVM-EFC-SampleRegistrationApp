@@ -12,6 +12,7 @@ namespace WpfRegistrationApp.WPF.State.Navigators
     public class Navigator : ObservableObjects, INavigator
     {
         private BaseViewModel _currentViewmodel;
+        private TracerEditViewModel _tracerEdit;
         public BaseViewModel currentViewmodel 
         {
             get

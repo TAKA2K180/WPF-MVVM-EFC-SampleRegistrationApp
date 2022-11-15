@@ -19,6 +19,8 @@ using MSMQ.Messaging;
 using System.Diagnostics;
 using System.Windows.Data;
 using WpfRegistrationApp.WPF.State.Helpers;
+using WpfRegistrationApp.WPF.Views;
+using MaterialDesignThemes.Wpf;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
@@ -31,6 +33,9 @@ namespace WpfRegistrationApp.WPF.ViewModels
         private string filter;
         LogEventHelpers logEventHelpers = new LogEventHelpers();
         MsmqHelper msmqHelper = new MsmqHelper(); 
+        Navigator navigator = new Navigator();
+        private readonly INavigator _navigator;
+        IServiceAgent sa = new ServiceAgent();
         #endregion
 
         #region Properties
@@ -159,6 +164,13 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 }
             }
         }
+
+        private CustomCommand _nextPage;
+        public CustomCommand NextPage
+        {
+            get { return _nextPage; }
+            set { _nextPage = value; }
+        }
         #endregion
 
         #region Constructor
@@ -166,7 +178,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         {
             this._serviceAgent = serviceAgent;
             this.DeleteCommand = new CustomCommand(Delete);
-            GetAllUserlist(); 
+            LoadUsers(); 
         }
         #endregion
 
@@ -239,9 +251,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                logEventHelpers.LogEventMessageError(ex.Message);
+                logEventHelpers.LogEventMessageError(ex.ToString());
             }
-            
         }
         public void Delete(dynamic obj)
         {
@@ -258,13 +269,13 @@ namespace WpfRegistrationApp.WPF.ViewModels
                         msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
                        logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + this.VaccineName + "");
                         await dataService.Delete(IdHandlers.Id);
-                        MessageBox.Show("User deleted", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("User deleted.", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Information);
                         await LoadUsers();
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
-                        logEventHelpers.LogEventMessageError(ex.Message);
+                        logEventHelpers.LogEventMessageError(ex.ToString());
                     }
                     break;
                 case MessageBoxResult.No:
@@ -273,6 +284,11 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     break;
             }
         }
+
+        public void OnClick()
+        {
+        }
+            
         #endregion
     }
 }

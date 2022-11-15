@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,7 +46,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
             get { return _id; }
             set { _id = value; OnPropertyChanged("ID"); }
         }
-        
 
         private string _firstName;
         public string FirstName
@@ -130,7 +131,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
             get { return _isEnabled; }
             set { _isEnabled = value; OnPropertyChanged("IsEnabled"); }
         }
-
         #endregion
 
         #region Constructor
@@ -141,6 +141,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
             SubmitCommand = new CustomCommand(this.Update);
 
             LoadUserAsync();
+
+            Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
         }
         #endregion
 
@@ -167,7 +169,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
-                            LogEventHelpers.LogEventMessageError(ex.Message);
+                            LogEventHelpers.LogEventMessageError(ex.ToString());
                         }
                         break;
                     case MessageBoxResult.No:
@@ -248,17 +250,34 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                LogEventHelpers.LogEventMessageError(ex.Message);
+                LogEventHelpers.LogEventMessageError(ex.ToString());
             }
         }
-
-        public void Onexit()
+        void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            if (_navigator.currentViewmodel != new TracerEditViewModel(_serviceAgent))
-            {
-
-            }
+            OnExit();
         }
+
+        public void OnExit()
+        {
+            this.FirstName = null;
+            this.LastName = null;
+            this.Address = null;
+            this.Email = null;
+            this.UserName = null;
+            this.DateFirstDose = default;
+            this.NumberofShots = default;
+            this.VaccineName = null;
+            this.IsBooster = default;
+            this.IsVaccinated = default;
+            this.IsEnabled = default;
+            this.Id = default;
+
+            IdHandlers.Id = default;
+            ExceptionHelper.exceptionCounter = 0;
+        }
+
+        
         #endregion
     }
 }

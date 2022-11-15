@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using WpfRegistration.EntityFramework.Services;
+using WpfRegistrationApp.WPF.State.Helpers;
 using WpfRegistrationApp.WPF.State.Navigators;
 using WpfRegistrationApp.WPF.ViewModels;
 
@@ -56,7 +57,6 @@ namespace WpfRegistrationApp.WPF.Commands
                 {
                     throw new ArgumentException(nameof(parameter), "View not found");
                 }
-
             }
         }
         #endregion

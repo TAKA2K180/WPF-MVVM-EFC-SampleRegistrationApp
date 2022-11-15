@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:WpfRegistrationApp.WPF.Views"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Unloaded="UserControl_Unloaded">
+    
     <Grid Background="{DynamicResource MaterialDesignLightBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
@@ -65,6 +66,6 @@
 
         <DatePicker x:Name="dtpFirstDose" Grid.Column="3" Grid.Row="7" FontSize="27" SelectedDate="{Binding DateFirstDose}" DisplayDate="{Binding DateFirstDose}" IsEnabled="{Binding IsEnabled}"/>
 
-        <Button Style="{DynamicResource MaterialDesignFlatLightBgButton}" Background="{DynamicResource MaterialDesignDarkBackground}" Foreground="{DynamicResource MaterialDesignLightBackground}" x:Name="btnSubmit" Content="UPDATE" Grid.Column="3" Grid.Row="9" FontSize="20" Command="{Binding SubmitCommand}"/>
+        <Button Style="{DynamicResource MaterialDesignFlatLightBgButton}" Background="{DynamicResource MaterialDesignDarkBackground}" Foreground="{DynamicResource MaterialDesignLightBackground}" x:Name="btnSubmit" Content="UPDATE" Grid.Column="3" Grid.Row="9" FontSize="20" Command="{Binding SubmitCommand}" IsEnabled="{Binding IsEnabled}"/>
     </Grid>
 </UserControl>

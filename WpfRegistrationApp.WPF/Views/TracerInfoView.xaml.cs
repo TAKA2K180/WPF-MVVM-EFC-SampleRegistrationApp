@@ -49,6 +49,7 @@ namespace WpfRegistrationApp.WPF.Views
 
         private void LvUserlist_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            object parameter = default;
             var item = (ListView)sender;
             TracerViewModel tracer = new TracerViewModel(sa);
             tracer.SelectedItem((UserModel)item.SelectedItem);
