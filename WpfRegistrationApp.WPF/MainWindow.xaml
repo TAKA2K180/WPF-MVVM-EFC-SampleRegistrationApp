@@ -6,6 +6,7 @@
         xmlns:Controls="clr-namespace:WpfRegistrationApp.WPF.Controls"
         xmlns:local="clr-namespace:WpfRegistrationApp.WPF"
         xmlns:viewmodel="clr-namespace:WpfRegistrationApp.WPF.ViewModels"
+        xmlns:Mahapps="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontSize="13"

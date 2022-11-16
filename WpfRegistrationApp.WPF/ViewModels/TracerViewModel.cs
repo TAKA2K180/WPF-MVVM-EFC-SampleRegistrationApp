@@ -251,6 +251,9 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
             catch (Exception ex)
             {
+                ExceptionHelper.exceptionMessage = ex.Message;
+                ModalWindows modalWindows = new ModalWindows();
+                modalWindows.ShowDialog();
                 logEventHelpers.LogEventMessageError(ex.ToString());
             }
         }
@@ -260,33 +263,29 @@ namespace WpfRegistrationApp.WPF.ViewModels
         }
         public async Task DeleteItem()
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to the delete the selected user?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
-            switch (result)
+            MessageHelper.messageBody = "Are you sure you want to delete the selected user?";
+
+            MessageBoxView messageBoxView = new MessageBoxView();
+            messageBoxView.ShowDialog();
+
+            //MessageViewModel messageViewModel = new MessageViewModel();
+
+            if (MessageHelper.isYesClicked == true)
             {
-                case MessageBoxResult.Yes:
-                    try
-                    {
-                        msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
-                       logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + this.VaccineName + "");
-                        await dataService.Delete(IdHandlers.Id);
-                        MessageBox.Show("User deleted.", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Information);
-                        await LoadUsers();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                        logEventHelpers.LogEventMessageError(ex.ToString());
-                    }
-                    break;
-                case MessageBoxResult.No:
-                    break;
-                default:
-                    break;
+                await Delete();
+                MessageHelper.isYesClicked = default;
             }
         }
 
-        public void OnClick()
+        public async Task Delete()
         {
+            msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
+            logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + this.VaccineName + "");
+            await dataService.Delete(IdHandlers.Id);
+            ExceptionHelper.exceptionMessage = "User deleted.";
+            ModalWindows modalWindows = new ModalWindows();
+            modalWindows.ShowDialog();
+            await LoadUsers();
         }
             
         #endregion

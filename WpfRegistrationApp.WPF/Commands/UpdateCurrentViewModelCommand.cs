@@ -15,6 +15,7 @@ namespace WpfRegistrationApp.WPF.Commands
         public event EventHandler CanExecuteChanged;
         private readonly INavigator _navigator;
         IServiceAgent sa = new ServiceAgent();
+        MainViewModel mainViewModel = new MainViewModel();
         #endregion
 
         #region Constructors
@@ -40,15 +41,19 @@ namespace WpfRegistrationApp.WPF.Commands
                     switch (viewType)
                     {
                         case ViewType.Home:
+                            mainViewModel.OnExit();
                             _navigator.currentViewmodel = new HomeViewModel();
                             break;
                         case ViewType.Profile:
+                            mainViewModel.OnExit();
                             _navigator.currentViewmodel = new ProfileViewModel();
                             break;
                         case ViewType.TracerInfo:
+                            mainViewModel.OnExit();
                             _navigator.currentViewmodel = new TracerViewModel(sa);
                             break;
                         case ViewType.TracerEdit:
+                            mainViewModel.OnExit();
                             _navigator.currentViewmodel = new TracerEditViewModel(sa);
                             break;
                     }

@@ -16,6 +16,7 @@ using MaterialDesignThemes.Wpf;
 using System.Diagnostics;
 using System.IO;
 using MSMQ.Messaging;
+using WpfRegistrationApp.WPF.Views;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
@@ -131,31 +132,43 @@ namespace WpfRegistrationApp.WPF.ViewModels
         {
             if (this.FirstName == String.Empty || this.FirstName == null && this.LastName == String.Empty || this.LastName == null && this.UserName == String.Empty || this.UserName == null && this.Address == String.Empty || this.Address == null)
             {
-                MessageBox.Show("Please fill up required fields", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Error);
+                ExceptionHelper.exceptionMessage = "Please fill up required fields";
+                ModalWindows modalWindows = new ModalWindows();
+                modalWindows.ShowDialog();
             }
             else
             {
-                MessageBoxResult result = MessageBox.Show("Are you sure about the information you have entered?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
-                switch (result)
+                try
                 {
-                    case MessageBoxResult.Yes:
-                        try
-                        {
-                            dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, VaccineName = this.VaccineName, Address = this.Address });
-                            MessageBox.Show("Tracer record submitted", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Information);
-                            msmqHelper.SendMessage("New Record "+this.FirstName+" "+this.LastName+"");
-                            logEventHelpers.LogEventMessageInfo("New Record:\nFirst Name: " + this.FirstName+"\nLast Name: "+this.LastName+"\nAddress: "+this.Address+"\nVaccine: "+this.VaccineName+"");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                            logEventHelpers.LogEventMessageError(ex.ToString());
-                        }
-                        break;
-                    case MessageBoxResult.No:
-                        break;
+                    MessageHelper.messageBody = "Are you sure you want to register the following details?";
+
+                    MessageBoxView messageBoxView = new MessageBoxView();
+                    messageBoxView.ShowDialog();
+
+                    if (MessageHelper.isYesClicked == true)
+                    {
+                        Insert();
+                        MessageHelper.isYesClicked = default;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHelper.exceptionMessage = ex.Message;
+                    ModalWindows modalWindows = new ModalWindows();
+                    modalWindows.ShowDialog();
+                    logEventHelpers.LogEventMessageError(ex.ToString());
                 }
             }
+        }
+
+        public void Insert()
+        {
+            dataService.Create(new UserModel { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, DateJoined = DateTime.Now, Id = new Guid(), Email = this.EmailAdd, DateFirstDose = this.DateFirstDose, isBoosterShot = this.IsBoosterShot, isVaccinated = this.IsVaccinated, NumberofShots = this.NumberofDose, VaccineName = this.VaccineName, Address = this.Address });
+            ExceptionHelper.exceptionMessage = "Tracer record submitted";
+            ModalWindows modalWindows = new ModalWindows();
+            modalWindows.ShowDialog();
+            msmqHelper.SendMessage("New Record " + this.FirstName + " " + this.LastName + "");
+            logEventHelpers.LogEventMessageInfo("New Record:\nFirst Name: " + this.FirstName + "\nLast Name: " + this.LastName + "\nAddress: " + this.Address + "\nVaccine: " + this.VaccineName + "");
         }
         #endregion
     }

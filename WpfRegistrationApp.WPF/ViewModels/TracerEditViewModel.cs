@@ -17,6 +17,7 @@ using WpfRegistrationApp.WPF.Commands;
 using WpfRegistrationApp.WPF.State;
 using WpfRegistrationApp.WPF.State.Helpers;
 using WpfRegistrationApp.WPF.State.Navigators;
+using WpfRegistrationApp.WPF.Views;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
@@ -29,6 +30,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
         LogEventHelpers LogEventHelpers = new LogEventHelpers();
         MsmqHelper msmqHelper = new MsmqHelper();
         INavigator _navigator = new Navigator();
+        
         int passCounter = 0;
         #endregion
 
@@ -131,6 +133,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
             get { return _isEnabled; }
             set { _isEnabled = value; OnPropertyChanged("IsEnabled"); }
         }
+
+        public ErrorViewModel ErrorMessageViewModel { get; }
         #endregion
 
         #region Constructor
@@ -143,6 +147,8 @@ namespace WpfRegistrationApp.WPF.ViewModels
             LoadUserAsync();
 
             Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
+
+            ErrorMessageViewModel = new ErrorViewModel();
         }
         #endregion
 
@@ -151,32 +157,38 @@ namespace WpfRegistrationApp.WPF.ViewModels
         {
             if (this.FirstName == null || this.FirstName == "" && this.LastName == null || this.LastName == "" && this.Address == null && this.UserName == null )
             {
-                MessageBox.Show("Please fill up required fields", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show("Please fill up required fields", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Error);
+                ExceptionHelper.exceptionMessage = "Please fill up required fields";
+                ModalWindows modalWindows = new ModalWindows();
+                modalWindows.ShowDialog();
             }
             else
             {
-                MessageBoxResult result = MessageBox.Show("Are you sure about the information you have entered?", "WPF Tracer App", MessageBoxButton.YesNoCancel);
-                switch (result)
+                MessageHelper.messageBody = "Are you sure you want to update with the following details?";
+
+                MessageBoxView messageBoxView = new MessageBoxView();
+                messageBoxView.ShowDialog();
+
+                //MessageViewModel messageViewModel = new MessageViewModel();
+
+                if (MessageHelper.isYesClicked == true)
                 {
-                    case MessageBoxResult.Yes:
-                        try
-                        {
-                            dataService.Update(this.Id, new UserModel() { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, Email = this.Email, Address = this.Address, DateFirstDose = this.DateFirstDose, NumberofShots = this.NumberofShots, VaccineName = this.VaccineName, isBoosterShot = this.IsBooster, isVaccinated = this.IsVaccinated });
-                            MessageBox.Show("Profile updated");
-                            msmqHelper.SendMessage("Record updated " + this.FirstName + " " + this.LastName + "");
-                            LogEventHelpers.LogEventMessageInfo("Record updated:\nFirst Name: " + this.FirstName + "\nLast Name: " + this.LastName + "\nAddress: " + this.Address + "\nVaccine: " + this.VaccineName + "");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                            LogEventHelpers.LogEventMessageError(ex.ToString());
-                        }
-                        break;
-                    case MessageBoxResult.No:
-                        break;
-                    default:
-                        break;
+                    Update();
+                    MessageHelper.isYesClicked = default;
                 }
+            }
+        }
+
+        public async Task Update()
+        {
+            if (this.Id != null)
+            {
+                await dataService.Update(this.Id, new UserModel() { FirstName = this.FirstName, LastName = this.LastName, Username = this.UserName, Email = this.Email, Address = this.Address, DateFirstDose = this.DateFirstDose, NumberofShots = this.NumberofShots, VaccineName = this.VaccineName, isBoosterShot = this.IsBooster, isVaccinated = this.IsVaccinated });
+                ExceptionHelper.exceptionMessage = "Profile updated";
+                ModalWindows modalWindows = new ModalWindows();
+                modalWindows.ShowDialog();
+                msmqHelper.SendMessage("Record updated " + this.FirstName + " " + this.LastName + "");
+                LogEventHelpers.LogEventMessageInfo("Record updated:\nFirst Name: " + this.FirstName + "\nLast Name: " + this.LastName + "\nAddress: " + this.Address + "\nVaccine: " + this.VaccineName + "");
             }
         }
         //public void LoadUserById()
@@ -242,7 +254,9 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     {
                         if (ExceptionHelper.exceptionCounter <= 1)
                         {
-                            MessageBox.Show("Please select a user first in Tracer Info menu", "WPF Tracer App", MessageBoxButton.OK, MessageBoxImage.Error);
+                            ExceptionHelper.exceptionMessage = "Please select a user first in Tracer Info menu";
+                            ModalWindows modalWindows = new ModalWindows();
+                            modalWindows.ShowDialog();
                             this.IsEnabled = false;
                         }
                     }
@@ -250,7 +264,14 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                LogEventHelpers.LogEventMessageError(ex.ToString());
+                if (ExceptionHelper.exceptionCounter <= 1)
+                {
+                    ExceptionHelper.exceptionMessage = ex.Message;
+                    ModalWindows modalWindows = new ModalWindows();
+                    modalWindows.ShowDialog();
+                    LogEventHelpers.LogEventMessageError(ex.ToString());
+                }
+                
             }
         }
         void MainWindow_Closing(object sender, CancelEventArgs e)

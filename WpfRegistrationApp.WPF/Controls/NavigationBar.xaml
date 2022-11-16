@@ -34,13 +34,15 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            
+            
 
             <materialDesign:PackIcon Width="25"
                                      Height="25"
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Center" Kind="Home" Grid.Row="1" Grid.Column="0" Foreground="White"/>
 
-            <RadioButton Margin="0,1,0,0"  Grid.Column="1" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Home}" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Home" FontSize="20"/>
+            <RadioButton  Grid.Row="1" Margin="0 0 10 0"  Grid.Column="1" Command="{Binding UpdateCurrentViewModel}" CommandParameter="{x:Static nav:ViewType.Home}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Home" FontSize="20"/>
 
             <materialDesign:PackIcon Width="25"
                                      Height="25"
