@@ -1,28 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using WpfRegistrationApp.WPF.State.Navigators;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        public INavigator navigator { get; set; } = new Navigator();
-
-        private bool _isClosing = true;
+        #region Constructor
 
         public MainViewModel()
         {
-
         }
+
+        #endregion Constructor
+
+        #region Properties
+
+        public INavigator navigator { get; set; } = new Navigator();
+
+        private bool _isClosing = true;
 
         public bool IsClosing
         {
             get { return _isClosing; }
             set { _isClosing = value; OnPropertyChanged("IsClosing"); OnPropertyChanged("textBlockVis"); }
         }
+
         public Visibility textBlockVis
         {
             get
@@ -31,6 +33,10 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
         }
 
+        #endregion Properties
+
+        #region Methods
+
         public void OnExit()
         {
             if (navigator.currentViewmodel != this)
@@ -38,5 +44,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 IsClosing = false;
             }
         }
+
+        #endregion Methods
     }
 }

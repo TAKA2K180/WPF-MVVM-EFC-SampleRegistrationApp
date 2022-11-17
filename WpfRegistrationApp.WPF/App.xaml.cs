@@ -1,14 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Windows;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 using WpfRegistrationApp.WPF.State.Helpers;
 using WpfRegistrationApp.WPF.ViewModels;
+using WpfRegistrationApp.WPF.Views;
 
 namespace WpfRegistrationApp.WPF
 {
@@ -18,15 +12,19 @@ namespace WpfRegistrationApp.WPF
     public partial class App : Application
     {
         private readonly IHost _host;
+
         public App()
         {
             Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         }
 
-        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             LogEventHelpers logEventHelpers = new LogEventHelpers();
             logEventHelpers.LogEventMessageError(e.Exception.Message);
+            ExceptionHelper.exceptionMessage = $"{e.Exception.Message} No changes were made";
+            ModalWindows modalWindows = new ModalWindows();
+            modalWindows.ShowDialog();
             e.Handled = true;
         }
 

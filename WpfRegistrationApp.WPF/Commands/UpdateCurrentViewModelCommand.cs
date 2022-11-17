@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 using WpfRegistration.EntityFramework.Services;
-using WpfRegistrationApp.WPF.State.Helpers;
 using WpfRegistrationApp.WPF.State.Navigators;
 using WpfRegistrationApp.WPF.ViewModels;
 
@@ -12,20 +9,26 @@ namespace WpfRegistrationApp.WPF.Commands
     public class UpdateCurrentViewModelCommand : ICommand
     {
         #region Variable declarations
+
         public event EventHandler CanExecuteChanged;
+
         private readonly INavigator _navigator;
-        IServiceAgent sa = new ServiceAgent();
-        MainViewModel mainViewModel = new MainViewModel();
-        #endregion
+        private IServiceAgent sa = new ServiceAgent();
+        private MainViewModel mainViewModel = new MainViewModel();
+
+        #endregion Variable declarations
 
         #region Constructors
+
         public UpdateCurrentViewModelCommand(INavigator navigator)
         {
             _navigator = navigator;
         }
-        #endregion
+
+        #endregion Constructors
 
         #region Methods
+
         public bool CanExecute(object parameter)
         {
             return true;
@@ -44,14 +47,17 @@ namespace WpfRegistrationApp.WPF.Commands
                             mainViewModel.OnExit();
                             _navigator.currentViewmodel = new HomeViewModel();
                             break;
+
                         case ViewType.Profile:
                             mainViewModel.OnExit();
                             _navigator.currentViewmodel = new ProfileViewModel();
                             break;
+
                         case ViewType.TracerInfo:
                             mainViewModel.OnExit();
                             _navigator.currentViewmodel = new TracerViewModel(sa);
                             break;
+
                         case ViewType.TracerEdit:
                             mainViewModel.OnExit();
                             _navigator.currentViewmodel = new TracerEditViewModel(sa);
@@ -64,6 +70,7 @@ namespace WpfRegistrationApp.WPF.Commands
                 }
             }
         }
-        #endregion
+
+        #endregion Methods
     }
 }

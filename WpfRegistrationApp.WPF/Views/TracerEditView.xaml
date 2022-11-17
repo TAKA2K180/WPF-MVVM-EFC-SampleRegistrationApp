@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfRegistrationApp.WPF.Views"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:Control="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Unloaded="UserControl_Unloaded">
-    
+
     <Grid Background="{DynamicResource MaterialDesignLightBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>

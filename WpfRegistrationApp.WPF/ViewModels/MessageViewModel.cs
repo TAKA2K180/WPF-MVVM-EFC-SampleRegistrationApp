@@ -10,6 +10,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
 {
     public class MessageViewModel : BaseViewModel
     {
+		#region Properties
 		private string _messageBody;
 
 		public string MessageBody
@@ -17,37 +18,41 @@ namespace WpfRegistrationApp.WPF.ViewModels
 			get { return _messageBody; }
 			set { _messageBody = value; OnPropertyChanged(MessageBody); }
 		}
-
 		public CustomCommand ClickYes { get; set; }
 		public CustomCommand ClickNo { get; set; }
 
 		public bool isYesClicked { get; set; }
 		public bool isNoClicked { get; set; }
+		#endregion
 
+		#region Constructor
 		public MessageViewModel()
 		{
 			this.ClickYes = new CustomCommand(OnClickYes);
 			this.ClickNo = new CustomCommand(OnClickNo);
 			_messageBody = MessageHelper.messageBody;
-		}
+		} 
+		#endregion
 
+		#region Methods
 		public void OnClickYes(dynamic obj)
 		{
 			MessageHelper.isYesClicked = true;
-        }
+		}
 
 		public void OnClickNo(dynamic obj)
 		{
 			MessageHelper.isNoClicked = true;
-            MessageHelper.isYesClicked = false;
-        }
+			MessageHelper.isYesClicked = false;
+		}
 
-        private void CloseWindow(MessageBoxView window)
-        {
-            if (window != null)
-            {
-                window.Close();
-            }
-        }
-    }
+		private void CloseWindow(MessageBoxView window)
+		{
+			if (window != null)
+			{
+				window.Close();
+			}
+		} 
+		#endregion
+	}
 }

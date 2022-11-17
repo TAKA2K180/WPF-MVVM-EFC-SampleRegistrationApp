@@ -2,29 +2,32 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WpfRegistration.Domain.Models;
 using WpfRegistration.Domain.Services;
 
 namespace WpfRegistration.EntityFramework.Services
 {
-    public class GenericDataService<T> : IDataService<T> where T :  DomainObjects
+    public class GenericDataService<T> : IDataService<T> where T : DomainObjects
     {
         #region Variable declarations
+
         private readonly DbContextFactory _dbContextFactory;
-        #endregion
+
+        #endregion Variable declarations
 
         #region Constructor
+
         public GenericDataService(DbContextFactory dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
         }
-        #endregion
+
+        #endregion Constructor
 
         #region Async Methods
+
         public async Task<T> Create(T entity)
         {
             using (ApplicationDbContext context = _dbContextFactory.CreateDbContext())
@@ -77,6 +80,7 @@ namespace WpfRegistration.EntityFramework.Services
                 return entity;
             };
         }
-        #endregion
+
+        #endregion Async Methods
     }
 }

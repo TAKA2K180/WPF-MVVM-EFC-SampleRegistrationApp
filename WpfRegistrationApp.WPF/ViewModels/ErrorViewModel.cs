@@ -9,7 +9,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
 {
     public class ErrorViewModel : BaseViewModel
     {
-
 		#region Constructor
 		public ErrorViewModel()
 		{
@@ -33,7 +32,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
 		{
 			//ModalWindows modalWindows = new ModalWindows();
 			//modalWindows.Close();
-		} 
+		}
 		#endregion
 	}
 }

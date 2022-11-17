@@ -1,53 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using WpfRegistration.Domain.Models;
 using WpfRegistration.Domain.Services;
-using WpfRegistration.EntityFramework.Services;
 using WpfRegistration.EntityFramework;
-using System.Linq;
+using WpfRegistration.EntityFramework.Services;
 using WpfRegistrationApp.WPF.Commands;
-using System.Threading.Tasks;
-using System.Windows;
-using WpfRegistrationApp.WPF.State.Navigators;
-using WpfRegistrationApp.WPF.State;
-using System.Windows.Input;
-using System.Reflection;
-using MSMQ.Messaging;
-using System.Diagnostics;
-using System.Windows.Data;
 using WpfRegistrationApp.WPF.State.Helpers;
+using WpfRegistrationApp.WPF.State.Navigators;
 using WpfRegistrationApp.WPF.Views;
-using MaterialDesignThemes.Wpf;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
     public class TracerViewModel : BaseViewModel
     {
         #region Variables
+
         private IServiceAgent _serviceAgent;
-        private ICollectionView phrasesView;
-        IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
+        private IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
         private string filter;
-        LogEventHelpers logEventHelpers = new LogEventHelpers();
-        MsmqHelper msmqHelper = new MsmqHelper(); 
-        Navigator navigator = new Navigator();
-        private readonly INavigator _navigator;
-        IServiceAgent sa = new ServiceAgent();
-        #endregion
+        private LogEventHelpers logEventHelpers = new LogEventHelpers();
+        private MsmqHelper msmqHelper = new MsmqHelper();
+        private Navigator navigator = new Navigator();
+        private IServiceAgent sa = new ServiceAgent();
+
+        #endregion Variables
 
         #region Properties
+
         private ObservableCollection<UserModel> _users;
+
         public ObservableCollection<UserModel> Users
         {
             get { return _users; }
             set { _users = value; OnPropertyChanged("Users"); }
         }
+
         public ICommand EditCommand { get; set; }
 
         private UserModel selectedUser;
+
         public UserModel SelectedUser
         {
             get { return selectedUser; }
@@ -57,7 +52,9 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 OnPropertyChanged("SelectedUser");
             }
         }
+
         private int selectedUserIndex;
+
         public int SelectedUserIndex
         {
             get { return selectedUserIndex; }
@@ -73,24 +70,31 @@ namespace WpfRegistrationApp.WPF.ViewModels
         }
 
         private string _firstName;
+
         public string FirstName
         {
             get { return _firstName; }
             set { _firstName = value; OnPropertyChanged(nameof(FirstName)); }
         }
+
         private string _lastName;
+
         public string LastName
         {
             get { return _lastName; }
             set { _lastName = value; OnPropertyChanged(nameof(LastName)); }
         }
+
         private string _address;
+
         public string Address
         {
             get { return _address; }
             set { _address = value; OnPropertyChanged(nameof(Address)); }
         }
+
         private string _vaccineName;
+
         public string VaccineName
         {
             get { return _vaccineName; }
@@ -148,46 +152,40 @@ namespace WpfRegistrationApp.WPF.ViewModels
             get { return _isVaccinated; }
             set { _isVaccinated = value; }
         }
-        public string Filter
+
+        private bool _isActive;
+
+        public bool IsActive
         {
-            get
-            {
-                return filter;
-            }
-            set
-            {
-                if (value != filter)
-                {
-                    filter = value;
-                    phrasesView.Refresh();
-                    OnPropertyChanged("Filter");
-                }
-            }
+            get { return _isActive; }
+            set { _isActive = value; OnPropertyChanged("IsActive"); }
         }
 
-        private CustomCommand _nextPage;
-        public CustomCommand NextPage
-        {
-            get { return _nextPage; }
-            set { _nextPage = value; }
-        }
-        #endregion
+        #endregion Properties
 
         #region Constructor
+
         public TracerViewModel(IServiceAgent serviceAgent)
         {
             this._serviceAgent = serviceAgent;
             this.DeleteCommand = new CustomCommand(Delete);
-            LoadUsers(); 
+            this._isActive = true;
+
+            Task.Run(() => LoadUsers()).Wait();
+
+            //LoadUsers();
         }
-        #endregion
+
+        #endregion Constructor
 
         #region Methods
+
         public async Task LoadUsers()
         {
             //_serviceAgent.GetUsers((_users, error) => UserLoaded(_users, error));
             await GetAllUserlist();
         }
+
         private void UserLoaded(ObservableCollection<UserModel> users, Exception error)
         {
             if (error == null)
@@ -200,6 +198,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 NotifyError(error.Message, error);
             }
         }
+
         private void NotifyError(string message, Exception error)
         {
             if (message == "Loaded")
@@ -237,31 +236,24 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         public async Task GetUsersAsync()
         {
-            try
+            var Userlist = await Task.WhenAll(dataService.Getall());
+            List<UserModel> userModels = new List<UserModel>();
+            foreach (var user in Userlist)
             {
-                var Userlist = await Task.WhenAll(dataService.Getall());
-                List<UserModel> userModels = new List<UserModel>();
-                foreach (var user in Userlist)
-                {
-                    var userlisting = user.ToList();
-                    userModels = userlisting;
-                }
-                ObservableCollection<UserModel> users = new ObservableCollection<UserModel>(userModels);
-                this.Users = users;
+                var userlisting = user.ToList();
+                userModels = userlisting;
             }
-            catch (Exception ex)
-            {
-                ExceptionHelper.exceptionMessage = ex.Message;
-                ModalWindows modalWindows = new ModalWindows();
-                modalWindows.ShowDialog();
-                logEventHelpers.LogEventMessageError(ex.ToString());
-            }
+            ObservableCollection<UserModel> users = new ObservableCollection<UserModel>(userModels);
+            this.Users = users;
+            this.IsActive = false;
         }
+
         public void Delete(dynamic obj)
         {
-            DeleteItem();
+            DeleteItemAsync();
         }
-        public async Task DeleteItem()
+
+        public async Task DeleteItemAsync()
         {
             MessageHelper.messageBody = "Are you sure you want to delete the selected user?";
 
@@ -272,12 +264,14 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
             if (MessageHelper.isYesClicked == true)
             {
-                await Delete();
+                this.IsActive = true;
+                await DeleteUserAsync();
                 MessageHelper.isYesClicked = default;
+                this.IsActive = false;
             }
         }
 
-        public async Task Delete()
+        public async Task DeleteUserAsync()
         {
             msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
             logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + this.VaccineName + "");
@@ -287,7 +281,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
             modalWindows.ShowDialog();
             await LoadUsers();
         }
-            
-        #endregion
+
+        #endregion Methods
     }
 }
