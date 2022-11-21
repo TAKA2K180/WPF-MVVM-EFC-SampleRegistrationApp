@@ -23,7 +23,7 @@
         <control:ProgressRing IsActive="{Binding IsActive}"></control:ProgressRing>
         
 
-        <ListView Name="LvUserlist" HorizontalContentAlignment="Stretch" SelectedIndex="{Binding SelectedUserIndex}" ItemsSource="{Binding Users}" SelectionChanged="LvUserlist_SelectionChanged">
+        <ListView Name="LvUserlist" HorizontalContentAlignment="Stretch" SelectedIndex="{Binding SelectedUserIndex}" ItemsSource="{Binding Users}" SelectionChanged="LvUserlist_SelectionChanged" IsSynchronizedWithCurrentItem="False">
             <ListBox.Template>
                 <ControlTemplate>
                     <Grid>

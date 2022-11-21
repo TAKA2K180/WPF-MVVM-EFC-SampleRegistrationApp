@@ -7,8 +7,8 @@ using WpfRegistrationApp.WPF.Views;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
-    public class ErrorViewModel : BaseViewModel
-    {
+	public class ErrorViewModel : BaseViewModel
+	{
 		#region Constructor
 		public ErrorViewModel()
 		{

@@ -26,6 +26,7 @@ namespace WpfRegistrationApp.WPF
             ModalWindows modalWindows = new ModalWindows();
             modalWindows.ShowDialog();
             e.Handled = true;
+            ExceptionHelper.isExceptionHandled = true;
         }
 
         protected override void OnStartup(StartupEventArgs e)

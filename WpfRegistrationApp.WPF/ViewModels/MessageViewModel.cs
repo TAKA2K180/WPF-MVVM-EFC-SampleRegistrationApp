@@ -8,8 +8,8 @@ using WpfRegistrationApp.WPF.Views;
 
 namespace WpfRegistrationApp.WPF.ViewModels
 {
-    public class MessageViewModel : BaseViewModel
-    {
+	public class MessageViewModel : BaseViewModel
+	{
 		#region Properties
 		private string _messageBody;
 
@@ -20,7 +20,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
 		}
 		public CustomCommand ClickYes { get; set; }
 		public CustomCommand ClickNo { get; set; }
-
 		public bool isYesClicked { get; set; }
 		public bool isNoClicked { get; set; }
 		#endregion

@@ -17,5 +17,6 @@ namespace WpfRegistration.Domain.Models
         public static bool isVaccinated;
         public static bool isBoosterShot;
         public static DateTime DateFirstDose;
+        public static DateTime DateJoined;
     }
 }

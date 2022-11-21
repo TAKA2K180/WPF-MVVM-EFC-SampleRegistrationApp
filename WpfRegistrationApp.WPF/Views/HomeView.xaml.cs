@@ -76,16 +76,6 @@ namespace WpfRegistrationApp.WPF.Views
             }
         }
 
-        private void cbNumberofVaccines_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         #endregion
 
         private void chkBooster_Checked(object sender, RoutedEventArgs e)

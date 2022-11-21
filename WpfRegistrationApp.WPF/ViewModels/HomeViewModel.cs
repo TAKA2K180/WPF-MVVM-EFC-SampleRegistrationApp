@@ -158,31 +158,21 @@ namespace WpfRegistrationApp.WPF.ViewModels
             }
             else
             {
-                try
-                {
-                    MessageHelper.messageBody = "Are you sure you want to register the following details?";
+                MessageHelper.messageBody = "Are you sure you want to register the following details?";
 
-                    MessageBoxView messageBoxView = new MessageBoxView();
-                    messageBoxView.ShowDialog();
+                MessageBoxView messageBoxView = new MessageBoxView();
+                messageBoxView.ShowDialog();
 
-                    if (MessageHelper.isYesClicked == true)
-                    {
-                        //var task = Task.Run(async () => await Insert());
-                        Insert();
-                        MessageHelper.isYesClicked = default;
-                    }
-                }
-                catch (Exception ex)
+                if (MessageHelper.isYesClicked == true)
                 {
-                    ExceptionHelper.exceptionMessage = ex.Message;
-                    ModalWindows modalWindows = new ModalWindows();
-                    modalWindows.ShowDialog();
-                    logEventHelpers.LogEventMessageError(ex.ToString());
+                    //var task = Task.Run(() => Insert());
+                    Insert();
+                    MessageHelper.isYesClicked = default;
                 }
             }
         }
 
-        public async Task Insert()
+        public async Task Insert() 
         {
             await dataService.Create(new UserModel
             {
@@ -199,11 +189,15 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 VaccineName = this.VaccineName,
                 Address = this.Address
             });
-            ExceptionHelper.exceptionMessage = "Tracer record submitted";
-            ModalWindows modalWindows = new ModalWindows();
-            modalWindows.ShowDialog();
-            msmqHelper.SendMessage("New Record " + this.FirstName + " " + this.LastName + "");
-            logEventHelpers.LogEventMessageInfo("New Record:\nFirst Name: " + this.FirstName + "\nLast Name: " + this.LastName + "\nAddress: " + this.Address + "\nVaccine: " + this.VaccineName + "");
+            if (ExceptionHelper.isExceptionHandled == false)
+            {
+                ExceptionHelper.exceptionMessage = "Tracer record submitted";
+                ModalWindows modalWindows = new ModalWindows();
+                modalWindows.ShowDialog();
+                msmqHelper.SendMessage("New Record " + this.FirstName + " " + this.LastName + "");
+                logEventHelpers.LogEventMessageInfo("New Record:\nFirst Name: " + this.FirstName + "\nLast Name: " + this.LastName + "\nAddress: " + this.Address + "\nVaccine: " + this.VaccineName + "");
+            }
+            
         }
 
         #endregion Methods

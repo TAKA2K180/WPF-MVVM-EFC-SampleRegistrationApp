@@ -27,15 +27,12 @@ namespace WpfRegistrationApp.WPF.Views
     public partial class TracerInfoView : UserControl
     {
         private readonly TracerViewModel _vm; 
-        IServiceAgent sa = new ServiceAgent();
         public TracerInfoView()
         {
             InitializeComponent();
             
-            _vm = new TracerViewModel(sa);
+            _vm = new TracerViewModel();
             DataContext = this._vm;
-
-           // _vm.LoadUsers();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -51,7 +48,7 @@ namespace WpfRegistrationApp.WPF.Views
         {
             object parameter = default;
             var item = (ListView)sender;
-            TracerViewModel tracer = new TracerViewModel(sa);
+            TracerViewModel tracer = new TracerViewModel();
             tracer.SelectedItem((UserModel)item.SelectedItem);
         }
     }

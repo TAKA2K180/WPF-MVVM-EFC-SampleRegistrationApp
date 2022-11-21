@@ -20,7 +20,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
     {
         #region Variables
 
-        private readonly IServiceAgent _serviceAgent;
         private readonly IDataService<UserModel> dataService = new GenericDataService<UserModel>(new DbContextFactory());
         private readonly UserModel user = new UserModel();
         private readonly LogEventHelpers LogEventHelpers = new LogEventHelpers();
@@ -81,7 +80,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
             set { _vaccineName = value; OnPropertyChanged(nameof(VaccineName)); }
         }
 
-        private DateTime _dateFirstDose;
+        private DateTime _dateFirstDose = DateTime.Now;
 
         public DateTime DateFirstDose
         {
@@ -154,13 +153,13 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         #region Constructor
 
-        public TracerEditViewModel(IServiceAgent serviceAgent)
+        public TracerEditViewModel()
         {
-            this._serviceAgent = serviceAgent;
 
             SubmitCommand = new CustomCommand(this.Update);
 
-            Task.Run(() => LoadUserAsync()).Wait();
+           // Task.Run(() => LoadUserAsync()).Wait();
+            LoadUserAsync();
             
             
             Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
@@ -189,15 +188,15 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 if (MessageHelper.isYesClicked == true)
                 {
                     this.IsActive = true;
-                    
-                    Update();
+
+                    UpdateAsync();
                     MessageHelper.isYesClicked = default;
                     this.IsActive = false;
                 }
             }
         }
 
-        public async Task Update()
+        public async Task UpdateAsync()
         {
             if (this.Id != null)
             {
@@ -212,13 +211,17 @@ namespace WpfRegistrationApp.WPF.ViewModels
                     NumberofShots = this.NumberofShots,
                     VaccineName = this.VaccineName,
                     isBoosterShot = this.IsBooster,
-                    isVaccinated = this.IsVaccinated
+                    isVaccinated = this.IsVaccinated,
+                    DateJoined = IdHandlers.DateJoined
                 });
-                ExceptionHelper.exceptionMessage = "Profile updated.";
-                ModalWindows modalWindows = new ModalWindows();
-                modalWindows.ShowDialog();
-                msmqHelper.SendMessage("Record updated " + this.FirstName + " " + this.LastName + "");
-                LogEventHelpers.LogEventMessageInfo("Record updated:\nFirst Name: " + this.FirstName + "\nLast Name: " + this.LastName + "\nAddress: " + this.Address + "\nVaccine: " + this.VaccineName + "");
+                if (ExceptionHelper.isExceptionHandled == false)
+                {
+                    ExceptionHelper.exceptionMessage = "Profile updated.";
+                    ModalWindows modalWindows = new ModalWindows();
+                    modalWindows.ShowDialog();
+                    msmqHelper.SendMessage($"Record updated {this.FirstName} {" "} {this.LastName}");
+                    LogEventHelpers.LogEventMessageInfo($"Record updated:\nFirst Name: {this.FirstName}\nLast Name: {this.LastName}\nAddress: {this.Address}\nVaccine: {this.VaccineName}");
+                }
             }
         }
 

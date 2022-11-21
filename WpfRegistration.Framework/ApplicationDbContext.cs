@@ -13,12 +13,12 @@ namespace WpfRegistration.EntityFramework
 
         #endregion Constructor
 
-        #region Db Sets
+        #region Entities
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<AccountModel> Accounts { get; set; }
 
-        #endregion Db Sets
+        #endregion Entities
 
         #region Methods
 

@@ -29,7 +29,7 @@ namespace WpfRegistrationApp.WPF.Views
         public TracerEditView()
         {
             InitializeComponent();
-            viewModel = new TracerEditViewModel(sa);
+            viewModel = new TracerEditViewModel();
             DataContext = this.viewModel;
 
             cbVaccineName.ItemsSource = Enum.GetValues(typeof(VaccineNames.Vaccines));

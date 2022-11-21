@@ -25,7 +25,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
         private LogEventHelpers logEventHelpers = new LogEventHelpers();
         private MsmqHelper msmqHelper = new MsmqHelper();
         private Navigator navigator = new Navigator();
-        private IServiceAgent sa = new ServiceAgent();
 
         #endregion Variables
 
@@ -165,15 +164,14 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         #region Constructor
 
-        public TracerViewModel(IServiceAgent serviceAgent)
+        public TracerViewModel()
         {
-            this._serviceAgent = serviceAgent;
             this.DeleteCommand = new CustomCommand(Delete);
             this._isActive = true;
 
-            Task.Run(() => LoadUsers()).Wait();
+            //Task.Run(() => LoadUsers()).Wait();
 
-            //LoadUsers();
+            LoadUsers();
         }
 
         #endregion Constructor
@@ -226,6 +224,7 @@ namespace WpfRegistrationApp.WPF.ViewModels
                 IdHandlers.NumberofShots = user.NumberofShots;
                 IdHandlers.isVaccinated = user.isVaccinated;
                 IdHandlers.isBoosterShot = user.isBoosterShot;
+                IdHandlers.DateJoined = user.DateJoined;
             }
         }
 
@@ -256,7 +255,6 @@ namespace WpfRegistrationApp.WPF.ViewModels
         public async Task DeleteItemAsync()
         {
             MessageHelper.messageBody = "Are you sure you want to delete the selected user?";
-
             MessageBoxView messageBoxView = new MessageBoxView();
             messageBoxView.ShowDialog();
 
@@ -273,12 +271,17 @@ namespace WpfRegistrationApp.WPF.ViewModels
 
         public async Task DeleteUserAsync()
         {
-            msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
-            logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + this.VaccineName + "");
             await dataService.Delete(IdHandlers.Id);
-            ExceptionHelper.exceptionMessage = "User deleted.";
-            ModalWindows modalWindows = new ModalWindows();
-            modalWindows.ShowDialog();
+
+            if (ExceptionHelper.isExceptionHandled == false)
+            {
+                msmqHelper.SendMessage("Deleted Record " + IdHandlers.FirstName + " " + IdHandlers.LastName + "");
+                logEventHelpers.LogEventMessageInfo("Record deleted:\nFirst Name: " + IdHandlers.FirstName + "\nLast Name: " + IdHandlers.LastName + "\nAddress: " + IdHandlers.Address + "\nVaccine: " + IdHandlers.VaccineName + "");
+
+                ExceptionHelper.exceptionMessage = "User deleted.";
+                ModalWindows modalWindows = new ModalWindows();
+                modalWindows.ShowDialog();
+            }
             await LoadUsers();
         }
 
